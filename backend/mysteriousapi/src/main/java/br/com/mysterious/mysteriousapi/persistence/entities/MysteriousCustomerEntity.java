@@ -7,9 +7,6 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 @EqualsAndHashCode
 @ToString
 public class MysteriousCustomerEntity {
@@ -20,4 +17,46 @@ public class MysteriousCustomerEntity {
     private String phone;
     @OneToOne
     private MysteriousUserEntity mysteriousUser;
+
+    public MysteriousCustomerEntity() {
+    }
+
+    public MysteriousCustomerEntity(UUID mysteriousCustomerId, String name, String phone, MysteriousUserEntity mysteriousUser) {
+        this.mysteriousCustomerId = mysteriousCustomerId;
+        this.name = name;
+        this.phone = phone;
+        this.mysteriousUser = mysteriousUser;
+    }
+
+    public UUID getMysteriousCustomerId() {
+        return mysteriousCustomerId;
+    }
+
+    public void setMysteriousCustomerId(UUID mysteriousCustomerId) {
+        this.mysteriousCustomerId = mysteriousCustomerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public MysteriousUserEntity getMysteriousUser() {
+        return mysteriousUser;
+    }
+
+    public void setMysteriousUser(MysteriousUserEntity mysteriousUser) {
+        this.mysteriousUser = mysteriousUser;
+    }
 }

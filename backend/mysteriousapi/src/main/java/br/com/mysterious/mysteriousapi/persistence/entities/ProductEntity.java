@@ -7,9 +7,6 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 @EqualsAndHashCode
 @ToString
 public class ProductEntity {
@@ -20,4 +17,55 @@ public class ProductEntity {
     private double price;
     private int quantity;
     private String description;
+
+    public ProductEntity() {
+    }
+
+    public ProductEntity(Long productId, String productName, double price, int quantity, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
