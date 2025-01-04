@@ -3,7 +3,7 @@ package br.com.mysterious.mysteriousapi.application.usecases.product;
 import br.com.mysterious.mysteriousapi.application.mappers.ProductMapper;
 import br.com.mysterious.mysteriousapi.domain.entities.product.Product;
 import br.com.mysterious.mysteriousapi.persistence.entities.ProductEntity;
-import br.com.mysterious.mysteriousapi.repositories.ProductRepository;
+import br.com.mysterious.mysteriousapi.persistence.repositories.ProductRepository;
 
 import java.util.List;
 
