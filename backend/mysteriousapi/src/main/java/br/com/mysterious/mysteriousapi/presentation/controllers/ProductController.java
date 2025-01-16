@@ -54,7 +54,7 @@ public class ProductController {
     @PutMapping("/edit/{productId}")
     public ResponseEntity<ProductResponseDTO> editProduct(@PathVariable Long productId, @RequestBody ProductRequestDTO productRequestDTO) throws NonPositiveNumberException, RequiredValueException, ProductNotFoundException {
         Product product = productDTOMapper.toProduct(productRequestDTO);
-        product.setId(productId);
+        product.setProductId(productId);
         product = updateProductUseCase.execute(product);
         return new ResponseEntity<>(productDTOMapper.toProductResponseDTO(product), HttpStatus.OK);
     }

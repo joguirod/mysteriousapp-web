@@ -7,7 +7,7 @@ import br.com.mysterious.mysteriousapi.presentation.dtos.response.ProductRespons
 public class ProductDTOMapper {
     public ProductResponseDTO toProductResponseDTO(Product product) {
         return new ProductResponseDTO(
-                product.getId(),
+                product.getProductId(),
                 product.getProductName(),
                 product.getQuantity(),
                 product.getPrice(),
@@ -19,13 +19,17 @@ public class ProductDTOMapper {
         return new Product(
                 productResponseDTO.getId(),
                 productResponseDTO.getName(),
-                productResponseDTO.getQuantity(),
                 productResponseDTO.getPrice(),
+                productResponseDTO.getQuantity(),
                 productResponseDTO.getDescription()
         );
     }
 
     public Product toProduct(ProductRequestDTO productRequestDTO) {
-        return new Product(productRequestDTO.getName(), productRequestDTO.getQuantity(), productRequestDTO.getPrice(), productRequestDTO.getDescription());
+        return new Product(productRequestDTO.getName(),
+                productRequestDTO.getPrice(),
+                productRequestDTO.getQuantity(),
+                productRequestDTO.getDescription()
+        );
     }
 }

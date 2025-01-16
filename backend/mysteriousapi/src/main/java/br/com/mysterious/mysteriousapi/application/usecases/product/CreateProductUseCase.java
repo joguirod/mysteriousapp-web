@@ -2,26 +2,21 @@ package br.com.mysterious.mysteriousapi.application.usecases.product;
 
 import br.com.mysterious.mysteriousapi.application.exceptions.NonPositiveNumberException;
 import br.com.mysterious.mysteriousapi.application.exceptions.RequiredValueException;
-import br.com.mysterious.mysteriousapi.application.mappers.ProductMapper;
 import br.com.mysterious.mysteriousapi.domain.entities.product.Product;
-import br.com.mysterious.mysteriousapi.persistence.entities.ProductEntity;
 import br.com.mysterious.mysteriousapi.persistence.repositories.ProductRepository;
 
 public class CreateProductUseCase {
     ProductRepository productRepository;
-    ProductMapper productMapper;
 
-    public CreateProductUseCase(ProductRepository productRepository, ProductMapper productMapper) {
+    public CreateProductUseCase(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.productMapper = productMapper;
     }
 
     public Product execute(Product product) throws NonPositiveNumberException, RequiredValueException {
         validateEmptyValues(product);
-        ProductEntity productEntity = productMapper.toEntity(product);
-        productEntity = productRepository.save(productEntity);
+        product = productRepository.save(product);
 
-        return productMapper.toDomainObject(productEntity);
+        return product;
     }
 
     private void validateEmptyValues(Product product) throws NonPositiveNumberException, RequiredValueException {

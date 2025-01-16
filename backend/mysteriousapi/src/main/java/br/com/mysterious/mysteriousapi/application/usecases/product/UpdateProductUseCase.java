@@ -3,30 +3,23 @@ package br.com.mysterious.mysteriousapi.application.usecases.product;
 import br.com.mysterious.mysteriousapi.application.exceptions.NonPositiveNumberException;
 import br.com.mysterious.mysteriousapi.application.exceptions.ProductNotFoundException;
 import br.com.mysterious.mysteriousapi.application.exceptions.RequiredValueException;
-import br.com.mysterious.mysteriousapi.application.mappers.ProductMapper;
 import br.com.mysterious.mysteriousapi.domain.entities.product.Product;
-import br.com.mysterious.mysteriousapi.persistence.entities.ProductEntity;
 import br.com.mysterious.mysteriousapi.persistence.repositories.ProductRepository;
 
 public class UpdateProductUseCase {
     ProductRepository productRepository;
-    ProductMapper productMapper;
 
-    public UpdateProductUseCase(ProductRepository productRepository, ProductMapper productMapper) {
+    public UpdateProductUseCase(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.productMapper = productMapper;
     }
 
     public Product execute(Product product) throws ProductNotFoundException, RequiredValueException, NonPositiveNumberException {
-        if (productRepository.findById(product.getId()).isEmpty()) {
-            throw new ProductNotFoundException("Product with id " + product.getId() + " not found");
+        if (productRepository.findById(product.getProductId()).isEmpty()) {
+            throw new ProductNotFoundException("Product with id " + product.getProductId() + " not found");
         }
         validate(product);
 
-        ProductEntity productEntity = new ProductEntity(product.getId(), product.getProductName(), product.getPrice(), product.getQuantity(), product.getDescription());
-        productEntity = productRepository.save(productEntity);
-
-        return productMapper.toDomainObject(productEntity);
+        return productRepository.save(product);
     }
 
     private void validate(Product product) throws ProductNotFoundException, RequiredValueException, NonPositiveNumberException {

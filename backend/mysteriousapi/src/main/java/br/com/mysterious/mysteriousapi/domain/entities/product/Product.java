@@ -1,36 +1,52 @@
 package br.com.mysterious.mysteriousapi.domain.entities.product;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
+
+@Entity
+@EqualsAndHashCode
+@ToString
 public class Product {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long productId;
     private String productName;
-    private int quantity;
     private Double price;
+    private int quantity;
     private String description;
-
-    public Product(Long id, String productName, int quantity, Double price, String description) {
-        this.id = id;
-        this.productName = productName;
-        this.quantity = quantity;
-        this.price = price;
-        this.description = description;
-    }
-
-    public Product(String productName, int quantity, Double price, String description) {
-        this.productName = productName;
-        this.quantity = quantity;
-        this.price = price;
-        this.description = description;
-    }
+    private String productPictureUrl;
 
     public Product() {
     }
 
-    public Long getId() {
-        return id;
+    public Product(Long productId) {
+        this.productId = productId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Product(Long productId, String productName, Double price, int quantity, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+    }
+
+    public Product(String productName, Double price, int quantity, String description) {
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -63,5 +79,13 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProductPictureUrl() {
+        return productPictureUrl;
+    }
+
+    public void setProductPictureUrl(String productPictureUrl) {
+        this.productPictureUrl = productPictureUrl;
     }
 }

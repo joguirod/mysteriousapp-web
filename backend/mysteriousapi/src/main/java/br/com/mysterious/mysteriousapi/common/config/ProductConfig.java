@@ -1,6 +1,5 @@
 package br.com.mysterious.mysteriousapi.common.config;
 
-import br.com.mysterious.mysteriousapi.application.mappers.ProductMapper;
 import br.com.mysterious.mysteriousapi.application.usecases.product.CreateProductUseCase;
 import br.com.mysterious.mysteriousapi.application.usecases.product.DeleteProductUseCase;
 import br.com.mysterious.mysteriousapi.application.usecases.product.ListAllProductsUseCase;
@@ -11,24 +10,20 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ProductConfig {
+
     @Bean
-    ProductMapper productMapper() {
-        return new ProductMapper();
+    ListAllProductsUseCase listAllProductsUseCase(ProductRepository productRepository) {
+        return new ListAllProductsUseCase(productRepository);
     }
 
     @Bean
-    ListAllProductsUseCase listAllProductsUseCase(ProductRepository productRepository, ProductMapper productMapper) {
-        return new ListAllProductsUseCase(productRepository, productMapper);
+    CreateProductUseCase createProductUseCase(ProductRepository productRepository) {
+        return new CreateProductUseCase(productRepository);
     }
 
     @Bean
-    CreateProductUseCase createProductUseCase(ProductRepository productRepository, ProductMapper productMapper) {
-        return new CreateProductUseCase(productRepository, productMapper);
-    }
-
-    @Bean
-    UpdateProductUseCase updateProductUseCase(ProductRepository productRepository, ProductMapper productMapper) {
-        return new UpdateProductUseCase(productRepository, productMapper);
+    UpdateProductUseCase updateProductUseCase(ProductRepository productRepository) {
+        return new UpdateProductUseCase(productRepository);
     }
 
     @Bean

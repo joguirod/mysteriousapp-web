@@ -1,7 +1,7 @@
 package br.com.mysterious.mysteriousapi.infrastructure.security;
 
-import br.com.mysterious.mysteriousapi.application.mappers.MysteriousUserMapper;
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUser;
+import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUserType;
 import br.com.mysterious.mysteriousapi.persistence.repositories.MysteriousUserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,8 +23,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     AuthService authService;
     @Autowired
     MysteriousUserRepository mysteriousUserRepository;
-    @Autowired
-    private MysteriousUserMapper mysteriousUserMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,8 +33,11 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var login = authService.validateToken(token);
 
                 if (login != null) {
-                    MysteriousUser user = mysteriousUserMapper.toDomainObject(mysteriousUserRepository.findByEmail(login));
+                    MysteriousUser user = mysteriousUserRepository.findByEmail(login);
                     var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+                    if (user.getMysteriousUserType() == MysteriousUserType.ADMINISTRATOR) {
+                        authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"));
+                    }
                     var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }

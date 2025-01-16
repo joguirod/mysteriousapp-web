@@ -1,20 +1,17 @@
 package br.com.mysterious.mysteriousapi.application.usecases.mysteriousUser;
 
 import br.com.mysterious.mysteriousapi.application.exceptions.MysteriousUserAlreadyExistsException;
-import br.com.mysterious.mysteriousapi.application.mappers.MysteriousUserMapper;
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUser;
-import br.com.mysterious.mysteriousapi.persistence.entities.MysteriousUserEntity;
+import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUserType;
 import br.com.mysterious.mysteriousapi.persistence.repositories.MysteriousUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class SignupMysteriousUserUseCase {
     private final MysteriousUserRepository mysteriousUserRepository;
-    private final MysteriousUserMapper mysteriousUserMapper;
     private PasswordEncoder passwordEncoder;
 
-    public SignupMysteriousUserUseCase(MysteriousUserRepository mysteriousUserRepository, MysteriousUserMapper mysteriousUserMapper) {
+    public SignupMysteriousUserUseCase(MysteriousUserRepository mysteriousUserRepository) {
         this.mysteriousUserRepository = mysteriousUserRepository;
-        this.mysteriousUserMapper = mysteriousUserMapper;
     }
 
     public MysteriousUser execute(MysteriousUser mysteriousUser) throws MysteriousUserAlreadyExistsException {
@@ -22,10 +19,11 @@ public class SignupMysteriousUserUseCase {
             throw new MysteriousUserAlreadyExistsException("An user with the given email already exists");
         }
 
-        MysteriousUserEntity mysteriousUserEntity = mysteriousUserMapper.toEntity(mysteriousUser);
-        mysteriousUserEntity.setPassword(passwordEncoder.encode(mysteriousUser.getPassword()));
+        mysteriousUser.setPassword(passwordEncoder.encode(mysteriousUser.getPassword()));
 
-        mysteriousUserEntity = mysteriousUserRepository.save(mysteriousUserEntity);
-        return mysteriousUserMapper.toDomainObject(mysteriousUserEntity);
+        // o cadastro é somente de usuários, o administrador é cadastro pelo banco
+        mysteriousUser.setMysteriousUserType(MysteriousUserType.CUSTOMER);
+
+        return mysteriousUserRepository.save(mysteriousUser);
     }
 }
