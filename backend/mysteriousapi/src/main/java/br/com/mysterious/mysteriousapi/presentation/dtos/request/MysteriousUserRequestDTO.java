@@ -1,19 +1,19 @@
-package br.com.mysterious.mysteriousapi.domain.entities.customer;
+package br.com.mysterious.mysteriousapi.presentation.dtos.request;
 
 import java.util.UUID;
 
-public class MysteriousUser {
-    private UUID mysteriousUserId;
+public class MysteriousUserRequestDTO {
     private String username;
     private String email;
     private String password;
 
-    public UUID getMysteriousUserId() {
-        return mysteriousUserId;
+    public MysteriousUserRequestDTO() {
     }
 
-    public void setMysteriousUserId(UUID mysteriousUserId) {
-        this.mysteriousUserId = mysteriousUserId;
+    public MysteriousUserRequestDTO(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     public String getUsername() {
