@@ -1,23 +1,23 @@
 package br.com.mysterious.mysteriousapi.infrastructure.security;
 
+import br.com.mysterious.mysteriousapi.application.providers.TokenProvider;
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUser;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@Service
-public class AuthService {
+public class JwtTokenProvider implements TokenProvider {
     @Value("${api.security.token.secret}")
     private String secret;
 
+    @Override
     public String generateToken(MysteriousUser user) {
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -33,6 +33,7 @@ public class AuthService {
         }
     }
 
+    @Override
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);

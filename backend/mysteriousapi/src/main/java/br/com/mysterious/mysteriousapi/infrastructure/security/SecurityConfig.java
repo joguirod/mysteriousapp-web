@@ -1,5 +1,7 @@
 package br.com.mysterious.mysteriousapi.infrastructure.security;
 
+import br.com.mysterious.mysteriousapi.application.providers.HashProvider;
+import br.com.mysterious.mysteriousapi.infrastructure.providers.BCryptHashProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,11 +35,6 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

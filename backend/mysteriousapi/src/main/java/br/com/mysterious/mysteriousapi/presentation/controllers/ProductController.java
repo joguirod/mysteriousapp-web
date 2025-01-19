@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductController {
     private final CreateProductUseCase createProductUseCase;
     private final ListAllProductsUseCase listAllProductsUseCase;

@@ -1,5 +1,6 @@
 package br.com.mysterious.mysteriousapi.infrastructure.security;
 
+import br.com.mysterious.mysteriousapi.application.providers.TokenProvider;
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUser;
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUserType;
 import br.com.mysterious.mysteriousapi.persistence.repositories.MysteriousUserRepository;
@@ -16,11 +17,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
-    AuthService authService;
+    TokenProvider tokenProvider;
     @Autowired
     MysteriousUserRepository mysteriousUserRepository;
 
@@ -30,12 +32,12 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (!request.getRequestURI().contains("/auth/user/signIn")) {
             System.out.println("ROTA ATUAL: " + request.getRequestURI());
             if (token != null) {
-                var login = authService.validateToken(token);
+                var login = tokenProvider.validateToken(token);
 
                 if (login != null) {
-                    MysteriousUser user = mysteriousUserRepository.findByEmail(login);
+                    Optional<MysteriousUser> user = mysteriousUserRepository.findByEmail(login);
                     var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-                    if (user.getMysteriousUserType() == MysteriousUserType.ADMINISTRATOR) {
+                    if (user.get().getMysteriousUserType() == MysteriousUserType.ADMINISTRATOR) {
                         authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"));
                     }
                     var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);

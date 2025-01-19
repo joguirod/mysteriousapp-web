@@ -1,22 +1,22 @@
 package br.com.mysterious.mysteriousapi.application.usecases.order;
 
 import br.com.mysterious.mysteriousapi.application.exceptions.OrderNotFoundException;
-import br.com.mysterious.mysteriousapi.domain.entities.order.Order;
-import br.com.mysterious.mysteriousapi.persistence.repositories.OrderRepository;
+import br.com.mysterious.mysteriousapi.domain.entities.order.MysteriousOrder;
+import br.com.mysterious.mysteriousapi.persistence.repositories.MysteriousOrderRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public class GetOrderByIdUseCase {
 
-    private final OrderRepository orderRepository;
+    private final MysteriousOrderRepository mysteriousOrderRepository;
 
-    public GetOrderByIdUseCase(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public GetOrderByIdUseCase(MysteriousOrderRepository mysteriousOrderRepository) {
+        this.mysteriousOrderRepository = mysteriousOrderRepository;
     }
 
-    public Order execute(UUID id) throws OrderNotFoundException {
-        Optional<Order> optionalOrder = orderRepository.findById(id);
+    public MysteriousOrder execute(UUID id) throws OrderNotFoundException {
+        Optional<MysteriousOrder> optionalOrder = mysteriousOrderRepository.findById(id);
 
         if (optionalOrder.isEmpty()) {
             throw new OrderNotFoundException("Order with the given ID not found");

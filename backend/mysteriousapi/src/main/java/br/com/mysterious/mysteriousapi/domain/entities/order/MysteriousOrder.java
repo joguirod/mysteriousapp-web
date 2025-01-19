@@ -3,6 +3,7 @@ package br.com.mysterious.mysteriousapi.domain.entities.order;
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousCustomer;
 import br.com.mysterious.mysteriousapi.domain.entities.orderAction.OrderAction;
 import jakarta.persistence.*;
+import org.hibernate.query.Order;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Order {
+public class MysteriousOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID orderId;
@@ -23,16 +24,16 @@ public class Order {
     private PickUpLocation pickUpLocation;
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderAction> orderActionList;
     private Double totalValue;
 
-    public Order() {
+    public MysteriousOrder() {
         this.orderItems = new ArrayList<>();
         this.orderActionList = new ArrayList<>();
     }
 
-    public Order(UUID orderId, LocalDateTime orderDate, MysteriousCustomer mysteriousCustomer, OrderStatus orderStatus, PickUpLocation pickUpLocation, List<OrderItem> orderItems) {
+    public MysteriousOrder(UUID orderId, LocalDateTime orderDate, MysteriousCustomer mysteriousCustomer, OrderStatus orderStatus, PickUpLocation pickUpLocation, List<OrderItem> orderItems) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.mysteriousCustomer = mysteriousCustomer;
@@ -47,6 +48,19 @@ public class Order {
             total += orderItem.getPrice();
         }
         return total;
+    }
+
+    public void finishOrder() {
+        this.finishDate = LocalDateTime.now();
+        this.orderStatus = OrderStatus.FINISHED;
+    }
+
+    public void cancelOrder() {
+        this.orderStatus = OrderStatus.CANCELLED;
+    }
+
+    public void addOrderAction(OrderAction orderAction) {
+        this.orderActionList.add(orderAction);
     }
 
     public UUID getOrderId() {

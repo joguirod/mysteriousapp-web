@@ -1,7 +1,7 @@
 package br.com.mysterious.mysteriousapi.domain.entities.orderAction;
 
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUser;
-import br.com.mysterious.mysteriousapi.domain.entities.order.Order;
+import br.com.mysterious.mysteriousapi.domain.entities.order.MysteriousOrder;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,19 +18,19 @@ public class OrderAction {
     private String description;
     private OrderActionType actionType;
     @ManyToOne
-    private Order order;
+    private MysteriousOrder mysteriousOrder;
     @ManyToOne
     private MysteriousUser mysteriousUser;
 
     public OrderAction() {
     }
 
-    public OrderAction(Long orderActionId, LocalDateTime actionDate, String description, OrderActionType actionType, Order order, MysteriousUser mysteriousUser) {
+    public OrderAction(Long orderActionId, LocalDateTime actionDate, String description, OrderActionType actionType, MysteriousOrder mysteriousOrder, MysteriousUser mysteriousUser) {
         this.orderActionId = orderActionId;
         this.actionDate = actionDate;
         this.description = description;
         this.actionType = actionType;
-        this.order = order;
+        this.mysteriousOrder = mysteriousOrder;
         this.mysteriousUser = mysteriousUser;
     }
 
@@ -66,12 +66,12 @@ public class OrderAction {
         this.actionType = actionType;
     }
 
-    public Order getOrder() {
-        return order;
+    public MysteriousOrder getMysteriousOrder() {
+        return mysteriousOrder;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setMysteriousOrder(MysteriousOrder mysteriousOrder) {
+        this.mysteriousOrder = mysteriousOrder;
     }
 
     public MysteriousUser getMysteriousUser() {

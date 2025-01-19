@@ -9,7 +9,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long orderItemId;
     @ManyToOne
-    private Order order;
+    private MysteriousOrder mysteriousOrder;
     @ManyToOne
     private Product product;
     private int quantity;
@@ -18,9 +18,9 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(Long orderItemId, Order order, Product product, int quantity, Double price) {
+    public OrderItem(Long orderItemId, MysteriousOrder mysteriousOrder, Product product, int quantity, Double price) {
         this.orderItemId = orderItemId;
-        this.order = order;
+        this.mysteriousOrder = mysteriousOrder;
         this.product = product;
         this.quantity = quantity;
         this.price = price;
@@ -34,12 +34,12 @@ public class OrderItem {
         this.orderItemId = orderItemId;
     }
 
-    public Order getOrder() {
-        return order;
+    public MysteriousOrder getOrder() {
+        return mysteriousOrder;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrder(MysteriousOrder mysteriousOrder) {
+        this.mysteriousOrder = mysteriousOrder;
     }
 
     public Product getProduct() {

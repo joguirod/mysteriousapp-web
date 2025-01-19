@@ -1,20 +1,20 @@
 package br.com.mysterious.mysteriousapi.application.usecases.order;
 
-import br.com.mysterious.mysteriousapi.domain.entities.order.Order;
+import br.com.mysterious.mysteriousapi.domain.entities.order.MysteriousOrder;
 import br.com.mysterious.mysteriousapi.domain.entities.order.OrderStatus;
-import br.com.mysterious.mysteriousapi.persistence.repositories.OrderRepository;
+import br.com.mysterious.mysteriousapi.persistence.repositories.MysteriousOrderRepository;
 
 import java.util.List;
 
 public class GetOrdersByOrderStatusUseCase {
-    private final OrderRepository orderRepository;
+    private final MysteriousOrderRepository mysteriousOrderRepository;
 
 
-    public GetOrdersByOrderStatusUseCase(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public GetOrdersByOrderStatusUseCase(MysteriousOrderRepository mysteriousOrderRepository) {
+        this.mysteriousOrderRepository = mysteriousOrderRepository;
     }
 
-    public List<Order> execute(OrderStatus orderStatus) {
-        return orderRepository.findByOrderStatus(orderStatus);
+    public List<MysteriousOrder> execute(OrderStatus orderStatus) {
+        return mysteriousOrderRepository.findByOrderStatus(orderStatus);
     }
 }
