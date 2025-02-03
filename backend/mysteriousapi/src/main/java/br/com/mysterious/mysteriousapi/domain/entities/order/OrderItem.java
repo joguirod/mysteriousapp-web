@@ -4,15 +4,24 @@ import br.com.mysterious.mysteriousapi.domain.entities.product.Product;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "itempedido")
+@SecondaryTable(name = "pedido", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id_pedido"))
+@SecondaryTable(name = "produto", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id_produto"))
+
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_item_pedido")
     private Long orderItemId;
     @ManyToOne
+    @JoinColumn(name = "id_pedido")
     private MysteriousOrder mysteriousOrder;
     @ManyToOne
+    @JoinColumn(name = "id_produto")
     private Product product;
+    @Column(name = "quantidade")
     private int quantity;
+    @Column(name = "preco")
     private Double price;
 
     public OrderItem() {

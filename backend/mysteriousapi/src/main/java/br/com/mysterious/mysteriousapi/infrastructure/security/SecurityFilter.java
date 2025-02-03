@@ -37,9 +37,6 @@ public class SecurityFilter extends OncePerRequestFilter {
                 if (login != null) {
                     Optional<MysteriousUser> user = mysteriousUserRepository.findByEmail(login);
                     var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-                    if (user.get().getMysteriousUserType() == MysteriousUserType.ADMINISTRATOR) {
-                        authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"));
-                    }
                     var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }

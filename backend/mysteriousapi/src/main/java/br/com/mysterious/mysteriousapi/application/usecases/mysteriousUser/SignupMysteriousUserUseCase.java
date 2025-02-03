@@ -23,9 +23,6 @@ public class SignupMysteriousUserUseCase {
 
         mysteriousUser.setPassword(hashProvider.hash(mysteriousUser.getPassword()));
 
-        // o cadastro é somente de usuários, o administrador é cadastro pelo banco
-        mysteriousUser.setMysteriousUserType(MysteriousUserType.CUSTOMER);
-
         return mysteriousUserRepository.save(mysteriousUser);
     }
 }

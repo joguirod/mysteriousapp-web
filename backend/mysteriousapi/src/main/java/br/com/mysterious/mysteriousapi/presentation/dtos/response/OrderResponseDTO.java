@@ -11,9 +11,8 @@ public record OrderResponseDTO (
     UUID customerId,
     LocalDateTime orderDate,
     LocalDateTime finishDate,
-    OrderStatus status,
     Double totalValue,
-    List<OrderItemResponseDTO> items,
-    List<OrderActionResponseDTO> actions
+    List<OrderItemResponseDTO> items
+//    List<OrderActionResponseDTO> actions
 ){
 }

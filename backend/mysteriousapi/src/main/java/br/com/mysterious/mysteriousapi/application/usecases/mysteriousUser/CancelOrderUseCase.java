@@ -34,7 +34,6 @@ public class CancelOrderUseCase {
         }
 
         MysteriousOrder mysteriousOrder = mysteriousOrderTemp.get();
-        mysteriousOrder.cancelOrder();
 
         OrderAction orderAction = new OrderAction();
         orderAction.setMysteriousOrder(mysteriousOrder);

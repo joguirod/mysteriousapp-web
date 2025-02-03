@@ -5,10 +5,7 @@ import br.com.mysterious.mysteriousapi.application.exceptions.MysteriousUserNotF
 import br.com.mysterious.mysteriousapi.application.exceptions.OrderNotFoundException;
 import br.com.mysterious.mysteriousapi.application.exceptions.OrderWithoutProductsException;
 import br.com.mysterious.mysteriousapi.application.usecases.mysteriousUser.CancelOrderUseCase;
-import br.com.mysterious.mysteriousapi.application.usecases.order.CreateOrderUseCase;
-import br.com.mysterious.mysteriousapi.application.usecases.order.GetAllOrdersUseCase;
-import br.com.mysterious.mysteriousapi.application.usecases.order.GetOrderByIdUseCase;
-import br.com.mysterious.mysteriousapi.application.usecases.order.GetOrdersByCustomerIdUseCase;
+import br.com.mysterious.mysteriousapi.application.usecases.order.*;
 import br.com.mysterious.mysteriousapi.domain.entities.order.MysteriousOrder;
 import br.com.mysterious.mysteriousapi.presentation.dtos.mappers.MysteriousOrderDTOMapper;
 import br.com.mysterious.mysteriousapi.presentation.dtos.request.ChangeOrderStatusRequestDTO;
@@ -31,14 +28,20 @@ public class OrderController {
     private final GetOrderByIdUseCase getOrderByIdUseCase;
     private final GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase;
     private final CancelOrderUseCase cancelOrderUseCase;
+    private final GetOrdersByYearUseCase getOrdersByYearUseCase;
+    private final GetOrdersByMonthUseCase getOrdersByMonthUseCase;
+    private final GetOrdersByMonthYearUseCase getOrdersByMonthYearUseCase;
 
-    public OrderController(MysteriousOrderDTOMapper mysteriousOrderDTOMapper, CreateOrderUseCase createOrderUseCase, GetAllOrdersUseCase getAllOrdersUseCase, GetOrderByIdUseCase getOrderByIdUseCase, GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase, CancelOrderUseCase cancelOrderUseCase) {
+    public OrderController(MysteriousOrderDTOMapper mysteriousOrderDTOMapper, CreateOrderUseCase createOrderUseCase, GetAllOrdersUseCase getAllOrdersUseCase, GetOrderByIdUseCase getOrderByIdUseCase, GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase, CancelOrderUseCase cancelOrderUseCase, GetOrdersByYearUseCase getOrdersByYearUseCase, GetOrdersByMonthUseCase getOrdersByMonthUseCase, GetOrdersByMonthYearUseCase getOrdersByMonthYearUseCase) {
         this.mysteriousOrderDTOMapper = mysteriousOrderDTOMapper;
         this.createOrderUseCase = createOrderUseCase;
         this.getAllOrdersUseCase = getAllOrdersUseCase;
         this.getOrderByIdUseCase = getOrderByIdUseCase;
         this.getOrdersByCustomerIdUseCase = getOrdersByCustomerIdUseCase;
         this.cancelOrderUseCase = cancelOrderUseCase;
+        this.getOrdersByYearUseCase = getOrdersByYearUseCase;
+        this.getOrdersByMonthUseCase = getOrdersByMonthUseCase;
+        this.getOrdersByMonthYearUseCase = getOrdersByMonthYearUseCase;
     }
 
     @PostMapping
@@ -51,6 +54,24 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
         List<MysteriousOrder> mysteriousOrders = getAllOrdersUseCase.execute();
+        return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
+    }
+
+    @GetMapping("/year/{year}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByYear(@PathVariable String year) {
+        List<MysteriousOrder> mysteriousOrders = getOrdersByYearUseCase.execute(year);
+        return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
+    }
+
+    @GetMapping("/month/{month}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByMonth(@PathVariable Integer month) {
+        List<MysteriousOrder> mysteriousOrders = getOrdersByMonthUseCase.execute(month);
+        return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
+    }
+
+    @GetMapping("/epoch")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByEpoch(@RequestParam Integer month, @RequestParam String year) {
+        List<MysteriousOrder> mysteriousOrders = getOrdersByMonthYearUseCase.execute(month, year);
         return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
     }
 

@@ -1,6 +1,7 @@
 package br.com.mysterious.mysteriousapi.presentation.dtos.mappers;
 
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousCustomer;
+import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUser;
 import br.com.mysterious.mysteriousapi.domain.entities.order.MysteriousOrder;
 import br.com.mysterious.mysteriousapi.domain.entities.order.OrderItem;
 import br.com.mysterious.mysteriousapi.domain.entities.orderAction.OrderAction;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 public class MysteriousOrderDTOMapper {
     public MysteriousOrder toDomainEntity(OrderRequestDTO orderRequestDTO) {
         MysteriousOrder mysteriousOrder = new MysteriousOrder();
-        mysteriousOrder.setMysteriousCustomer(new MysteriousCustomer(orderRequestDTO.mysteriousCustomerId()));
+        mysteriousOrder.setMysteriousUser(new MysteriousUser(orderRequestDTO.mysteriousCustomerId()));
         mysteriousOrder.setOrderItems(orderRequestDTO.items()
                 .stream()
                 .map(orderItemRequestDTO -> this.orderItemRequestDtoToEntity(orderItemRequestDTO))
@@ -28,23 +29,22 @@ public class MysteriousOrderDTOMapper {
     public OrderResponseDTO toResponseDTO(MysteriousOrder mysteriousOrder) {
         List<OrderItemResponseDTO> orderItemResponseDTOList = mysteriousOrder.getOrderItems()
                 .stream()
-                .map(orderItem -> this.orderItemEntityToResponseDTO(orderItem))
+                .map(this::orderItemEntityToResponseDTO)
                 .collect(Collectors.toList());
 
-        List<OrderActionResponseDTO> orderActionResponseDTOList = mysteriousOrder.getOrderActionList()
-                .stream()
-                .map(orderAction -> this.orderActionToResponseDTO(orderAction))
-                .collect(Collectors.toList());
+//        List<OrderActionResponseDTO> orderActionResponseDTOList = mysteriousOrder.getOrderActionList()
+//                .stream()
+//                .map(orderAction -> this.orderActionToResponseDTO(orderAction))
+//                .collect(Collectors.toList());
 
         return new OrderResponseDTO(
             mysteriousOrder.getOrderId(),
-            mysteriousOrder.getMysteriousCustomer().getMysteriousCustomerId(),
+            mysteriousOrder.getMysteriousUser().getMysteriousUserId(),
             mysteriousOrder.getOrderDate(),
             mysteriousOrder.getFinishDate(),
-            mysteriousOrder.getOrderStatus(),
             mysteriousOrder.getTotalValue(),
-            orderItemResponseDTOList,
-            orderActionResponseDTOList
+            orderItemResponseDTOList
+//            orderActionResponseDTOList
         );
     }
 

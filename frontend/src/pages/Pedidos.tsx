@@ -11,6 +11,7 @@ interface Order {
   orderId: string;
   customerId: string;
   orderDate: string;
+  finishDate: string;
   status: string;
   totalValue: number;
   items: OrderItem[];
@@ -33,7 +34,7 @@ const Pedidos = () => {
   const fetchPedidos = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/order');
-      const pedidosOngoing = response.data.filter((order: Order) => order.status === 'ONGOING');
+      const pedidosOngoing = response.data.filter((order: Order) => order.finishDate !== '');
       setPedidos(pedidosOngoing);
     } catch (err) {
       setError('Erro ao carregar pedidos.');

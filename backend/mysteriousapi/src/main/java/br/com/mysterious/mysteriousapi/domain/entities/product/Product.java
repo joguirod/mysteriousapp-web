@@ -1,22 +1,26 @@
 package br.com.mysterious.mysteriousapi.domain.entities.product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "produto")
 @EqualsAndHashCode
 @ToString
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_produto")
     private Long productId;
+    @Column(name = "nome_produto")
     private String productName;
+    @Column(name = "preco")
     private Double price;
+    @Column(name = "quantidade_estoque")
     private int quantity;
+    @Column(name = "descricao")
     private String description;
+    @Column(name = "url_foto_produto")
     private String productPictureUrl;
 
     public Product() {
