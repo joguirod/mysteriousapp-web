@@ -1,9 +1,8 @@
 package br.com.mysterious.mysteriousapi.common.config;
 
-import br.com.mysterious.mysteriousapi.application.usecases.product.CreateProductUseCase;
-import br.com.mysterious.mysteriousapi.application.usecases.product.DeleteProductUseCase;
-import br.com.mysterious.mysteriousapi.application.usecases.product.ListAllProductsUseCase;
-import br.com.mysterious.mysteriousapi.application.usecases.product.UpdateProductUseCase;
+import br.com.mysterious.mysteriousapi.application.usecases.product.*;
+import br.com.mysterious.mysteriousapi.persistence.repositories.GenreRepository;
+import br.com.mysterious.mysteriousapi.persistence.repositories.ProductCategoryRepository;
 import br.com.mysterious.mysteriousapi.persistence.repositories.ProductRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,5 +28,35 @@ public class ProductConfig {
     @Bean
     DeleteProductUseCase deleteProductUseCase(ProductRepository productRepository) {
         return new DeleteProductUseCase(productRepository);
+    }
+
+    @Bean
+    GetCategoriesSoldByMonthUseCase getCategoriesSoldByMonthUseCase(ProductCategoryRepository productCategoryRepository) {
+        return new GetCategoriesSoldByMonthUseCase(productCategoryRepository);
+    }
+
+    @Bean
+    GetCategoriesSoldByYearUseCase getCategoriesSoldByYearUseCase(ProductCategoryRepository productCategoryRepository) {
+        return new GetCategoriesSoldByYearUseCase(productCategoryRepository);
+    }
+
+    @Bean
+    GetCategoriesSoldByEpochUseCase getCategoriesSoldByEpochUseCase(ProductCategoryRepository productCategoryRepository) {
+        return new GetCategoriesSoldByEpochUseCase(productCategoryRepository);
+    }
+
+    @Bean
+    GetGenresSoldByMonthUseCase getGenresSoldByMonthUseCase(GenreRepository genreRepository) {
+        return new GetGenresSoldByMonthUseCase(genreRepository);
+    }
+
+    @Bean
+    GetGenresSoldByYearUseCase getGenresSoldByYearUseCase(GenreRepository genreRepository) {
+        return new GetGenresSoldByYearUseCase(genreRepository);
+    }
+
+    @Bean
+    GetGenresSoldByEpochUseCase getGenresSoldByEpochUseCase(GenreRepository genreRepository) {
+        return new GetGenresSoldByEpochUseCase(genreRepository);
     }
 }

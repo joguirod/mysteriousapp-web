@@ -64,6 +64,21 @@ public class MysteriousOrderConfig {
     }
 
     @Bean
+    GetTotalValueByYearUseCase getTotalValueByYearUseCase(MysteriousOrderRepository mysteriousOrderRepository) {
+        return new GetTotalValueByYearUseCase(mysteriousOrderRepository);
+    }
+
+    @Bean
+    GetTotalValueByMonthUseCase getTotalValueByMonthUseCase(MysteriousOrderRepository mysteriousOrderRepository) {
+        return new GetTotalValueByMonthUseCase(mysteriousOrderRepository);
+    }
+
+    @Bean
+    GetTotalValueByMonthYearUseCase getTotalValueByMonthYearUseCase(MysteriousOrderRepository mysteriousOrderRepository) {
+        return new GetTotalValueByMonthYearUseCase(mysteriousOrderRepository);
+    }
+
+    @Bean
     MysteriousOrderDTOMapper orderDTOMapper() {
         return new MysteriousOrderDTOMapper();
     }

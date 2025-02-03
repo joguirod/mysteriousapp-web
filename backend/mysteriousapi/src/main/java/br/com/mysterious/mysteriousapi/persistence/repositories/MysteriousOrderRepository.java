@@ -21,4 +21,13 @@ public interface MysteriousOrderRepository extends JpaRepository<MysteriousOrder
 
     @Query("SELECT mo FROM MysteriousOrder mo WHERE EXTRACT(MONTH FROM mo.orderDate) = :month AND EXTRACT(YEAR FROM mo.orderDate) = :year")
     List<MysteriousOrder> findByMonthAndYear(Integer month, String year);
+
+    @Query("SELECT SUM(mo.totalValue) FROM MysteriousOrder mo WHERE EXTRACT(YEAR FROM mo.orderDate) = :year")
+    Double getTotalValueByYear(String year);
+
+    @Query("SELECT SUM(mo.totalValue) FROM MysteriousOrder mo WHERE EXTRACT(MONTH FROM mo.orderDate) = :month")
+    Double getTotalValueByMonth(Integer month);
+
+    @Query("SELECT SUM(mo.totalValue) FROM MysteriousOrder mo WHERE EXTRACT(MONTH FROM mo.orderDate) = :month AND EXTRACT(YEAR FROM mo.orderDate) = :year")
+    Double getTotalValueByMonthAndYear(Integer month, String year);
 }

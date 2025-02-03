@@ -8,9 +8,7 @@ import br.com.mysterious.mysteriousapi.domain.entities.orderAction.OrderAction;
 import br.com.mysterious.mysteriousapi.domain.entities.product.Product;
 import br.com.mysterious.mysteriousapi.presentation.dtos.request.OrderItemRequestDTO;
 import br.com.mysterious.mysteriousapi.presentation.dtos.request.OrderRequestDTO;
-import br.com.mysterious.mysteriousapi.presentation.dtos.response.OrderActionResponseDTO;
-import br.com.mysterious.mysteriousapi.presentation.dtos.response.OrderItemResponseDTO;
-import br.com.mysterious.mysteriousapi.presentation.dtos.response.OrderResponseDTO;
+import br.com.mysterious.mysteriousapi.presentation.dtos.response.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,16 +54,28 @@ public class MysteriousOrderDTOMapper {
 
     private OrderItem orderItemRequestDtoToEntity(OrderItemRequestDTO orderItemRequestDTO) {
         OrderItem orderItem = new OrderItem();
-        orderItem.setProduct(new Product(orderItemRequestDTO.productId()));
+//        orderItem.setProduct(new Product(orderItemRequestDTO.productId()));
         orderItem.setQuantity(orderItem.getQuantity());
         orderItem.setPrice(orderItem.getPrice());
         return orderItem;
     }
 
     private OrderItemResponseDTO orderItemEntityToResponseDTO(OrderItem orderItem) {
+        CategoryResponseDTO category = new CategoryResponseDTO(
+                orderItem.getCategory().getId(),
+                orderItem.getCategory().getValue(),
+                orderItem.getCategory().getDescription()
+                );
+
+        GenreResponseDTO genre = new GenreResponseDTO(
+                orderItem.getGenre().getId(),
+                orderItem.getGenre().getDescription()
+        );
+
         return new OrderItemResponseDTO(
             orderItem.getOrderItemId(),
-            orderItem.getProduct().getProductId(),
+            category,
+            genre,
             orderItem.getQuantity(),
             orderItem.getPrice()
         );

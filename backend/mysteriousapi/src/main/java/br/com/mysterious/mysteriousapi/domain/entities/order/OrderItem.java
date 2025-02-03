@@ -1,6 +1,8 @@
 package br.com.mysterious.mysteriousapi.domain.entities.order;
 
+import br.com.mysterious.mysteriousapi.domain.entities.product.Genre;
 import br.com.mysterious.mysteriousapi.domain.entities.product.Product;
+import br.com.mysterious.mysteriousapi.domain.entities.product.ProductCategory;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,8 +19,11 @@ public class OrderItem {
     @JoinColumn(name = "id_pedido")
     private MysteriousOrder mysteriousOrder;
     @ManyToOne
-    @JoinColumn(name = "id_produto")
-    private Product product;
+    @JoinColumn(name = "id_categoria")
+    private ProductCategory category;
+    @ManyToOne
+    @JoinColumn(name = "id_genero")
+    private Genre genre;
     @Column(name = "quantidade")
     private int quantity;
     @Column(name = "preco")
@@ -27,10 +32,11 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(Long orderItemId, MysteriousOrder mysteriousOrder, Product product, int quantity, Double price) {
+    public OrderItem(Long orderItemId, MysteriousOrder mysteriousOrder, ProductCategory category, Genre genre, int quantity, Double price) {
         this.orderItemId = orderItemId;
         this.mysteriousOrder = mysteriousOrder;
-        this.product = product;
+        this.category = category;
+        this.genre = genre;
         this.quantity = quantity;
         this.price = price;
     }
@@ -43,20 +49,28 @@ public class OrderItem {
         this.orderItemId = orderItemId;
     }
 
-    public MysteriousOrder getOrder() {
+    public MysteriousOrder getMysteriousOrder() {
         return mysteriousOrder;
     }
 
-    public void setOrder(MysteriousOrder mysteriousOrder) {
+    public void setMysteriousOrder(MysteriousOrder mysteriousOrder) {
         this.mysteriousOrder = mysteriousOrder;
     }
 
-    public Product getProduct() {
-        return product;
+    public ProductCategory getCategory() {
+        return category;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setCategory(ProductCategory category) {
+        this.category = category;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     public int getQuantity() {
