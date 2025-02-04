@@ -12,8 +12,7 @@ interface Order {
   orderId: string;
   customerId: string;
   orderDate: string;
-  finishDate: string;
-  status: string;
+  finishDate: string | null; // Pode ser null
   totalValue: number;
   items: OrderItem[];
 }
@@ -31,7 +30,13 @@ const Historico = () => {
   const fetchHistorico = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/order');
+      
+      console.log("📌 Dados da API:", response.data); // Log dos dados recebidos
+  
       const pedidosFinalizados = response.data.filter((order: Order) => order.finishDate !== null);
+      
+      console.log("📌 Pedidos Finalizados:", pedidosFinalizados); // Log dos pedidos finalizados
+  
       setPedidosFinalizados(pedidosFinalizados);
     } catch (err) {
       setError('Erro ao carregar histórico de pedidos.');
@@ -40,6 +45,7 @@ const Historico = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -54,13 +60,16 @@ const Historico = () => {
           {pedidosFinalizados.map((pedido) => (
             <div
               key={pedido.orderId}
-              className="bg-white shadow-lg rounded-lg p-6 cursor-pointer"
+              className="bg-white shadow-lg rounded-lg p-6 cursor-pointer hover:shadow-xl transition"
               onClick={() => setSelectedOrder(pedido)}
             >
               <h2 className="text-xl font-semibold text-gray-800">Pedido #{pedido.orderId}</h2>
               <p className="text-gray-600">Total: R$ {pedido.totalValue.toFixed(2)}</p>
               <p className="text-gray-500">Itens: {pedido.items.length}</p>
-              <p className="text-gray-500">Finalizado em: {new Date(pedido.finishDate).toLocaleDateString()}</p>
+              <p className="text-gray-500">
+                Finalizado em:{' '}
+                {pedido.finishDate ? new Date(pedido.finishDate).toLocaleDateString() : 'Não finalizado'}
+              </p>
             </div>
           ))}
         </div>
@@ -70,11 +79,11 @@ const Historico = () => {
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-2xl font-bold mb-4">Detalhes do Pedido #{selectedOrder.orderId}</h2>
-            <p>Cliente ID: {selectedOrder.customerId}</p>
-            <p>Data do Pedido: {new Date(selectedOrder.orderDate).toLocaleDateString()}</p>
-            <p>Total: R$ {selectedOrder.totalValue.toFixed(2)}</p>
-            <p>Status: {selectedOrder.status}</p>
-            <button className="btn-secondary mt-4" onClick={() => setSelectedOrder(null)}>
+            <p><strong>Cliente ID:</strong> {selectedOrder.customerId}</p>
+            <p><strong>Data do Pedido:</strong> {new Date(selectedOrder.orderDate).toLocaleDateString()}</p>
+            <p><strong>Total:</strong> R$ {selectedOrder.totalValue.toFixed(2)}</p>
+            <p><strong>Finalizado em:</strong> {selectedOrder.finishDate ? new Date(selectedOrder.finishDate).toLocaleDateString() : 'Ainda não finalizado'}</p>
+            <button className="mt-4 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-900" onClick={() => setSelectedOrder(null)}>
               Fechar
             </button>
           </div>

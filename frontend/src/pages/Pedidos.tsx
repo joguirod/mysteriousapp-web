@@ -1,8 +1,14 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
 
 interface OrderItem {
-  productId: number;
+  productId: number | null;
   quantity: number;
   price: number;
 }
@@ -11,56 +17,72 @@ interface Order {
   orderId: string;
   customerId: string;
   orderDate: string;
-  finishDate: string;
-  status: string;
+  finishDate: string | null;
   totalValue: number;
   items: OrderItem[];
 }
 
 const Pedidos = () => {
   const [pedidos, setPedidos] = useState<Order[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [newOrder, setNewOrder] = useState<OrderItem[]>([
-    { productId: 0, quantity: 0, price: 0 },
-  ]);
+  const [newOrder, setNewOrder] = useState<OrderItem[]>([]);
 
   useEffect(() => {
     fetchPedidos();
+    fetchProducts();
   }, []);
 
-  // Buscar pedidos em andamento
   const fetchPedidos = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/order');
-      const pedidosOngoing = response.data.filter((order: Order) => order.finishDate !== '');
+      const response = await axios.get("http://localhost:8080/api/order");
+      const pedidosOngoing = response.data.filter((order: Order) => order.finishDate === null);
       setPedidos(pedidosOngoing);
     } catch (err) {
-      setError('Erro ao carregar pedidos.');
-      console.error('Erro ao buscar pedidos:', err);
+      setError("Erro ao carregar pedidos.");
+      console.error("Erro ao buscar pedidos:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Teste para criar um novo pedido 
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/product");
+      setProducts(response.data);
+    } catch (err) {
+      console.error("Erro ao buscar produtos:", err);
+    }
+  };
+
+  const openModal = () => {
+    setNewOrder([{ productId: null, quantity: 1, price: 0 }]); // Corrigido para permitir seleção válida
+    setShowModal(true);
+  };
+
   const handleCreateOrder = async () => {
-    const mysteriousUserId = localStorage.getItem('mysteriousUserId');
-    const mysteriousCustomerId = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
-    console.log(mysteriousUserId);
+    const mysteriousUserId = localStorage.getItem("mysteriousUserId");
     if (!mysteriousUserId) {
-      alert('Usuário não está logado. Por favor, faça login.');
+      alert("Usuário não está logado. Por favor, faça login.");
       return;
     }
 
-    if (newOrder.length === 0 || newOrder.some(item => item.productId === 0 || item.quantity === 0 || item.price === 0)) {
-      alert("Preencha todos os campos corretamente.");
+    if (newOrder.length === 0 || newOrder.some((item) => item.productId === null || item.quantity <= 0)) {
+      alert("Selecione pelo menos um produto e defina quantidades válidas.");
+      return;
+    }
+
+    const totalValue = newOrder.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    if (isNaN(totalValue) || totalValue <= 0) {
+      alert("Erro ao calcular o valor total do pedido.");
       return;
     }
 
     const formattedOrder = {
-      mysteriousCustomerId: mysteriousCustomerId,
+      mysteriousCustomerId: mysteriousUserId,
+      totalValue,
       items: newOrder.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
@@ -68,29 +90,25 @@ const Pedidos = () => {
       })),
     };
 
-    console.log('Objeto de pedido:', JSON.stringify(formattedOrder, null, 2));
-
     try {
-      await axios.post('http://localhost:8080/api/order', formattedOrder, {
-        headers: { 'Content-Type': 'application/json' },
+      await axios.post("http://localhost:8080/api/order", formattedOrder, {
+        headers: { "Content-Type": "application/json" },
       });
-      alert('Pedido criado com sucesso!');
+      alert("Pedido criado com sucesso!");
       setShowModal(false);
       fetchPedidos();
+      setNewOrder([]);
     } catch (error) {
-      console.error('Erro ao criar pedido:', error);
-      alert('Erro ao criar pedido. Verifique os dados e tente novamente.');
+      console.error("Erro ao criar pedido:", error);
+      alert("Erro ao criar pedido. Verifique os dados e tente novamente.");
     }
   };
 
   return (
     <div className="w-full h-full flex flex-col">
-      <h1 className="text-4xl font-bold mb-6">Pedidos em Andamento</h1>
+      <h1 className="text-4xl font-bold mb-6">Pedidos</h1>
 
-      <button
-        className="btn-primary self-start mb-6"
-        onClick={() => setShowModal(true)}
-      >
+      <button className="btn-primary self-start mb-6" onClick={openModal}>
         Criar Pedido
       </button>
 
@@ -118,17 +136,30 @@ const Pedidos = () => {
             <div className="grid grid-cols-3 gap-4 mb-4">
               {newOrder.map((item, index) => (
                 <div key={index} className="border p-4 rounded-lg shadow-md">
-                  <input
-                    type="number"
-                    placeholder="ID do Produto"
+                  <select
                     className="w-full border rounded-lg p-2 mb-2"
-                    value={item.productId}
+                    value={item.productId ?? ""}
                     onChange={(e) => {
                       const updatedItems = [...newOrder];
-                      updatedItems[index].productId = parseInt(e.target.value);
+                      const selectedProduct = products.find((p) => p.id === parseInt(e.target.value));
+                      if (selectedProduct) {
+                        updatedItems[index] = {
+                          productId: selectedProduct.id,
+                          quantity: item.quantity,
+                          price: selectedProduct.price,
+                        };
+                      }
                       setNewOrder(updatedItems);
                     }}
-                  />
+                  >
+                    <option value="">Selecione um produto</option>
+                    {products.map((product) => (
+                      <option key={product.id} value={product.id}>
+                        {product.name} - R$ {product.price.toFixed(2)}
+                      </option>
+                    ))}
+                  </select>
+
                   <input
                     type="number"
                     placeholder="Quantidade"
@@ -136,18 +167,8 @@ const Pedidos = () => {
                     value={item.quantity}
                     onChange={(e) => {
                       const updatedItems = [...newOrder];
-                      updatedItems[index].quantity = parseInt(e.target.value);
-                      setNewOrder(updatedItems);
-                    }}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Preço"
-                    className="w-full border rounded-lg p-2 mb-2"
-                    value={item.price}
-                    onChange={(e) => {
-                      const updatedItems = [...newOrder];
-                      updatedItems[index].price = parseFloat(e.target.value);
+                      const newQuantity = parseInt(e.target.value);
+                      updatedItems[index].quantity = isNaN(newQuantity) || newQuantity <= 0 ? 1 : newQuantity;
                       setNewOrder(updatedItems);
                     }}
                   />
@@ -157,7 +178,9 @@ const Pedidos = () => {
 
             <button
               className="btn-secondary mr-2"
-              onClick={() => setNewOrder([...newOrder, { productId: 0, quantity: 0, price: 0 }])}
+              onClick={() =>
+                setNewOrder([...newOrder, { productId: null, quantity: 1, price: 0 }])
+              }
             >
               Adicionar Item
             </button>
@@ -166,7 +189,11 @@ const Pedidos = () => {
               <button className="btn-secondary" onClick={() => setShowModal(false)}>
                 Cancelar
               </button>
-              <button className="btn-primary" onClick={handleCreateOrder}>
+              <button
+                className="btn-primary"
+                onClick={handleCreateOrder}
+                disabled={newOrder.length === 0 || newOrder.some((item) => item.productId === null)}
+              >
                 Criar Pedido
               </button>
             </div>

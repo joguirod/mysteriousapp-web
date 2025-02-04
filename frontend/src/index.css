@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 html, body, #root {
+  width: 100%;
   @apply h-full w-full bg-gray-100 text-gray-900;
 }
 
