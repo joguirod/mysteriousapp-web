@@ -1,4 +1,4 @@
-import { FaTachometerAlt, FaHistory, FaClipboardList, FaBox, FaBook, FaSignOutAlt, FaUser } from 'react-icons/fa';
+import { FaTachometerAlt, FaHistory, FaClipboardList, FaBox, FaBook, FaSignOutAlt } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../images/mysterious.jpg';
 import { useState } from 'react';
@@ -54,13 +54,13 @@ const Sidebar = () => {
           <SidebarItem icon={<FaClipboardList />} text="Pedidos em Andamento" link="/pedidos" active={location.pathname === '/pedidos'} />
           <SidebarItem icon={<FaBox />} text="Produtos" link="/produtos" active={location.pathname === '/produtos'} />
           <SidebarItem icon={<FaBook />} text="Livros" link="/livros" active={location.pathname === '/livros'} />
-          <li
+          {/* <li
             className="flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition hover:bg-gray-700"
             onClick={() => setShowModal(true)}
           >
             <span className="text-xl"><FaUser /></span>
             <span className="text-lg">Login / Cadastro</span>
-          </li>
+          </li> */}
         </ul>
 
         <div className="border-t border-gray-700 p-4">
