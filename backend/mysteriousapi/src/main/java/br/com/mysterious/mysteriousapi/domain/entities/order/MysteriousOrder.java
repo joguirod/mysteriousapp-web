@@ -28,14 +28,11 @@ public class MysteriousOrder {
     private MysteriousUser mysteriousUser;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderItemId")
     private List<OrderItem> orderItems;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "orderActionId")
-    private List<OrderAction> orderActionList;
     @Column(name = "valor_total")
     private Double totalValue;
 
     public MysteriousOrder() {
         this.orderItems = new ArrayList<>();
-        this.orderActionList = new ArrayList<>();
     }
 
     public MysteriousOrder(UUID orderId, LocalDateTime orderDate, MysteriousUser mysteriousUser, OrderStatus orderStatus, List<OrderItem> orderItems) {
@@ -55,10 +52,6 @@ public class MysteriousOrder {
 
     public void finishOrder() {
         this.finishDate = LocalDateTime.now();
-    }
-
-    public void addOrderAction(OrderAction orderAction) {
-        this.orderActionList.add(orderAction);
     }
 
     public UUID getOrderId() {
@@ -99,14 +92,6 @@ public class MysteriousOrder {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
-    }
-
-    public List<OrderAction> getOrderActionList() {
-        return orderActionList;
-    }
-
-    public void setOrderActionList(List<OrderAction> orderActionList) {
-        this.orderActionList = orderActionList;
     }
 
     public Double getTotalValue() {

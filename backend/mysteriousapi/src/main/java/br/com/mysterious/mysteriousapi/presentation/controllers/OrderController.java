@@ -5,6 +5,7 @@ import br.com.mysterious.mysteriousapi.application.exceptions.MysteriousUserNotF
 import br.com.mysterious.mysteriousapi.application.exceptions.OrderNotFoundException;
 import br.com.mysterious.mysteriousapi.application.exceptions.OrderWithoutProductsException;
 import br.com.mysterious.mysteriousapi.application.usecases.mysteriousUser.CancelOrderUseCase;
+import br.com.mysterious.mysteriousapi.application.usecases.mysteriousUser.FinishOrderUseCase;
 import br.com.mysterious.mysteriousapi.application.usecases.order.*;
 import br.com.mysterious.mysteriousapi.domain.entities.order.MysteriousOrder;
 import br.com.mysterious.mysteriousapi.domain.entities.order.OrderStatus;
@@ -36,8 +37,9 @@ public class OrderController {
     private final GetTotalValueByYearUseCase getTotalValueByYearUseCase;
     private final GetTotalValueByMonthUseCase getTotalValueByMonthUseCase;
     private final GetTotalValueByMonthYearUseCase getTotalValueByMonthYearUseCase;
+    private final FinishOrderUseCase finishOrderUseCase;
 
-    public OrderController(MysteriousOrderDTOMapper mysteriousOrderDTOMapper, CreateOrderUseCase createOrderUseCase, GetAllOrdersUseCase getAllOrdersUseCase, GetOrderByIdUseCase getOrderByIdUseCase, GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase, CancelOrderUseCase cancelOrderUseCase, GetOrdersByYearUseCase getOrdersByYearUseCase, GetOrdersByMonthUseCase getOrdersByMonthUseCase, GetOrdersByMonthYearUseCase getOrdersByMonthYearUseCase, GetTotalValueByYearUseCase getTotalValueByYearUseCase, GetTotalValueByMonthUseCase getTotalValueByMonthUseCase, GetTotalValueByMonthYearUseCase getTotalValueByMonthYearUseCase) {
+    public OrderController(MysteriousOrderDTOMapper mysteriousOrderDTOMapper, CreateOrderUseCase createOrderUseCase, GetAllOrdersUseCase getAllOrdersUseCase, GetOrderByIdUseCase getOrderByIdUseCase, GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase, CancelOrderUseCase cancelOrderUseCase, GetOrdersByYearUseCase getOrdersByYearUseCase, GetOrdersByMonthUseCase getOrdersByMonthUseCase, GetOrdersByMonthYearUseCase getOrdersByMonthYearUseCase, GetTotalValueByYearUseCase getTotalValueByYearUseCase, GetTotalValueByMonthUseCase getTotalValueByMonthUseCase, GetTotalValueByMonthYearUseCase getTotalValueByMonthYearUseCase, FinishOrderUseCase finishOrderUseCase) {
         this.mysteriousOrderDTOMapper = mysteriousOrderDTOMapper;
         this.createOrderUseCase = createOrderUseCase;
         this.getAllOrdersUseCase = getAllOrdersUseCase;
@@ -50,6 +52,7 @@ public class OrderController {
         this.getTotalValueByYearUseCase = getTotalValueByYearUseCase;
         this.getTotalValueByMonthUseCase = getTotalValueByMonthUseCase;
         this.getTotalValueByMonthYearUseCase = getTotalValueByMonthYearUseCase;
+        this.finishOrderUseCase = finishOrderUseCase;
     }
 
     @PostMapping
@@ -112,7 +115,7 @@ public class OrderController {
 
     @PostMapping("/finish")
     public ResponseEntity<OrderResponseDTO> finishOrder(@RequestBody ChangeOrderStatusRequestDTO finishOrderRequestDTO) throws OrderNotFoundException, MysteriousUserNotFoundException {
-        MysteriousOrder order = cancelOrderUseCase.execute(finishOrderRequestDTO.userId(), finishOrderRequestDTO.orderId());
+        MysteriousOrder order = finishOrderUseCase.execute(finishOrderRequestDTO.userId(), finishOrderRequestDTO.orderId());
         return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTO(order), HttpStatus.OK);
     }
 

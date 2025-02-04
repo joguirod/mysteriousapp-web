@@ -35,13 +35,6 @@ public class CancelOrderUseCase {
 
         MysteriousOrder mysteriousOrder = mysteriousOrderTemp.get();
 
-        OrderAction orderAction = new OrderAction();
-        orderAction.setMysteriousOrder(mysteriousOrder);
-        orderAction.setActionDate(mysteriousOrder.getFinishDate());
-        orderAction.setActionType(OrderActionType.CANCEL);
-        orderAction.setMysteriousUser(mysteriousUser.get());
-
-        mysteriousOrder.addOrderAction(orderAction);
         return mysteriousOrderRepository.save(mysteriousOrder);
     }
 }

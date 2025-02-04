@@ -38,13 +38,6 @@ public class FinishOrderUseCase {
         MysteriousOrder mysteriousOrder = mysteriousOrderTemp.get();
         mysteriousOrder.finishOrder();
 
-        OrderAction orderAction = new OrderAction();
-        orderAction.setMysteriousOrder(mysteriousOrder);
-        orderAction.setActionDate(mysteriousOrder.getFinishDate());
-        orderAction.setActionType(OrderActionType.FINISH);
-        orderAction.setMysteriousUser(mysteriousUser.get());
-
-        mysteriousOrder.addOrderAction(orderAction);
         return mysteriousOrderRepository.save(mysteriousOrder);
     }
 }

@@ -34,14 +34,6 @@ public class CreateOrderUseCase {
 
         mysteriousOrder.setOrderDate(LocalDateTime.now());
 
-        OrderAction orderAction = new OrderAction();
-        orderAction.setMysteriousOrder(mysteriousOrder);
-        orderAction.setActionDate(mysteriousOrder.getOrderDate());
-        orderAction.setActionType(OrderActionType.CREATE);
-        orderAction.setMysteriousUser(mysteriousOrder.getMysteriousUser());
-
-        mysteriousOrder.addOrderAction(orderAction);
-
         return mysteriousOrderRepository.save(mysteriousOrder);
     }
 }
