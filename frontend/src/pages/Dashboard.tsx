@@ -3,12 +3,12 @@ import axios from "axios";
 import Chart from "react-apexcharts";
 
 const Dashboard = () => {
-  const [selectedMonth, setSelectedMonth] = useState("1"); // Janeiro = 1
+  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString());
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
-  const [purchasesData, setPurchasesData] = useState<number[]>([]);
+  const [purchasesData, setPurchasesData] = useState<{ description: string; totalSold: number }[]>([]);
   const [popularOrdersData, setPopularOrdersData] = useState<number[]>([]);
-  const [genreSalesData, setGenreSalesData] = useState<number[]>([]);
+  const [genreSalesData, setGenreSalesData] = useState<{ description: string; totalSold: number }[]>([]);
 
   useEffect(() => {
     fetchTotalOrders();
@@ -46,14 +46,10 @@ const Dashboard = () => {
   // Buscar faturamento total
   const fetchTotalIncome = async () => {
     try {
-      const response = await axios.get(`/api/order/income/month/${selectedMonth}`);
+      const response = await axios.get(`http://localhost:8080/api/order/income/year/2025`);
       console.log("📊 Faturamento API Response:", response.data);
 
-      if (isValidJson(response.data) && typeof response.data === "number") {
         setTotalIncome(response.data);
-      } else {
-        console.error("⚠ Erro: resposta da API de faturamento não é válida", response.data);
-      }
     } catch (error: any) {
       console.error("❌ Erro ao buscar faturamento:", error.message);
     }
@@ -62,11 +58,11 @@ const Dashboard = () => {
   // Buscar compras mensais
   const fetchPurchasesData = async () => {
     try {
-      const response = await axios.get(`/api/product/totalSold/category/month/${selectedMonth}`);
+      const response = await axios.get(`http://localhost:8080/api/product/totalSold/category/month/${selectedMonth}`);
       console.log("📊 Compras Mensais API Response:", response.data);
 
       if (isValidJson(response.data)) {
-        setPurchasesData(Array.isArray(response.data) ? response.data.map((item) => item.totalSold) : []);
+        setPurchasesData(Array.isArray(response.data) ? response.data : []);
       } else {
         console.error("⚠ Erro: resposta da API de compras mensais não é válida", response.data);
       }
@@ -78,7 +74,7 @@ const Dashboard = () => {
   // Buscar pedidos populares
   const fetchPopularOrdersData = async () => {
     try {
-      const response = await axios.get(`/api/product/totalSold/category/month/${selectedMonth}`);
+      const response = await axios.get(`http://localhost:8080/api/product/totalSold/category/month/${selectedMonth}`);
       console.log("📊 Pedidos Populares API Response:", response.data);
 
       if (isValidJson(response.data)) {
@@ -94,11 +90,11 @@ const Dashboard = () => {
   // Buscar vendas por gênero
   const fetchGenreSalesData = async () => {
     try {
-      const response = await axios.get(`/api/product/totalSold/genre/month/${selectedMonth}`);
+      const response = await axios.get(`http://localhost:8080/api/product/totalSold/genre/month/${selectedMonth}`);
       console.log("📊 Vendas por Gênero API Response:", response.data);
 
       if (isValidJson(response.data)) {
-        setGenreSalesData(Array.isArray(response.data) ? response.data.map((item) => item.totalSold) : []);
+        setGenreSalesData(Array.isArray(response.data) ? response.data : []);
       } else {
         console.error("⚠ Erro: resposta da API de vendas por gênero não é válida", response.data);
       }
@@ -128,7 +124,15 @@ const Dashboard = () => {
       <div className="mt-10 flex flex-col space-y-8">
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Compras Mensais</h2>
-          <Chart options={{ chart: { id: "purchases-monthly" } }} series={[{ name: "Compras", data: purchasesData }]} type="bar" height={350} />
+          <Chart 
+            options={{ 
+              chart: { id: "purchases-monthly" },
+              xaxis: { categories: purchasesData.map(item => item.description) }
+            }} 
+            series={[{ name: "Compras", data: purchasesData.map(item => item.totalSold) }]} 
+            type="bar" 
+            height={350} 
+          />
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-6">
@@ -146,12 +150,15 @@ const Dashboard = () => {
               ))}
             </select>
           </div>
-          <Chart options={{ labels: ["Produto A", "Produto B", "Produto C", "Produto D"] }} series={popularOrdersData} type="pie" height={350} />
+          <Chart options={{ labels: ["Premium", "Standard", "Luxo"] }} series={popularOrdersData} type="pie" height={350} />
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Gênero Mais Vendido</h2>
-          <Chart options={{ chart: { id: "genre-sales" } }} series={[{ name: "Vendas", data: genreSalesData }]} type="bar" height={350} />
+          <Chart options={{ 
+              chart: { id: "genres-sales" },
+              xaxis: { categories: genreSalesData.map(item => item.description) }
+            }} series={[{ name: "Vendas", data: genreSalesData.map(item => item.totalSold) }]} type="bar" height={350} />
         </div>
       </div>
     </div>
