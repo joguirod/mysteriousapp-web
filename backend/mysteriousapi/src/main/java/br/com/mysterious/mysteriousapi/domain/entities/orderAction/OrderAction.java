@@ -8,18 +8,25 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "acaopedido")
 @EqualsAndHashCode
 @ToString
 public class OrderAction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_acao_pedido")
     private Long orderActionId;
+    @Column(name = "data_acao")
     private LocalDateTime actionDate;
+    @Column(name = "descricao")
     private String description;
+    @Column(name = "id_tipo_acao")
     private OrderActionType actionType;
     @ManyToOne
+    @JoinColumn(name = "id_pedido")
     private MysteriousOrder mysteriousOrder;
     @ManyToOne
+    @JoinColumn(name = "id_mysterious_user")
     private MysteriousUser mysteriousUser;
 
     public OrderAction() {

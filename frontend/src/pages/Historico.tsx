@@ -31,7 +31,7 @@ const Historico = () => {
   const fetchHistorico = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/order');
-      const pedidosFinalizados = response.data.filter((order: Order) => order.status !== 'ONGOING');
+      const pedidosFinalizados = response.data.filter((order: Order) => order.finishDate !== null);
       setPedidosFinalizados(pedidosFinalizados);
     } catch (err) {
       setError('Erro ao carregar histórico de pedidos.');

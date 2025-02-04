@@ -1,26 +1,32 @@
 package br.com.mysterious.mysteriousapi.domain.entities.customer;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
 
 @Entity
+@Table(name = "mysterioususer")
 @EqualsAndHashCode
 @ToString
 public class MysteriousUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_mysterious_user")
     private UUID mysteriousUserId;
     private String username;
     private String email;
+    @Column(name = "senha")
     private String password;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_mysterious_user_type")
     private MysteriousUserType mysteriousUserType;
 
     public MysteriousUser() {
+    }
+
+    public MysteriousUser(UUID mysteriousUserId) {
+        this.mysteriousUserId = mysteriousUserId;
     }
 
     public MysteriousUser(UUID mysteriousUserId, String username, String email, String password) {

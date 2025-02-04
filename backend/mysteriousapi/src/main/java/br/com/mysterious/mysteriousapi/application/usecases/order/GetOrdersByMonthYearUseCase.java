@@ -4,17 +4,16 @@ import br.com.mysterious.mysteriousapi.domain.entities.order.MysteriousOrder;
 import br.com.mysterious.mysteriousapi.persistence.repositories.MysteriousOrderRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public class GetOrdersByCustomerIdUseCase {
+public class GetOrdersByMonthYearUseCase {
 
     private final MysteriousOrderRepository mysteriousOrderRepository;
 
-    public GetOrdersByCustomerIdUseCase(MysteriousOrderRepository mysteriousOrderRepository) {
+    public GetOrdersByMonthYearUseCase(MysteriousOrderRepository mysteriousOrderRepository) {
         this.mysteriousOrderRepository = mysteriousOrderRepository;
     }
 
-    public List<MysteriousOrder> execute(UUID customerId) {
-        return mysteriousOrderRepository.findByMysteriousUser_MysteriousUserId(customerId);
+    public List<MysteriousOrder> execute(Integer month, String year) {
+        return this.mysteriousOrderRepository.findByMonthAndYear(month, year);
     }
 }

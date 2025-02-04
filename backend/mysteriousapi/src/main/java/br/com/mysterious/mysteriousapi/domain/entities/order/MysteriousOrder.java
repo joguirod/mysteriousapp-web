@@ -1,8 +1,10 @@
 package br.com.mysterious.mysteriousapi.domain.entities.order;
 
 import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousCustomer;
+import br.com.mysterious.mysteriousapi.domain.entities.customer.MysteriousUser;
 import br.com.mysterious.mysteriousapi.domain.entities.orderAction.OrderAction;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.query.Order;
 
 import java.time.LocalDateTime;
@@ -11,21 +13,24 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "pedido")
 public class MysteriousOrder {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @Column(name = "id_pedido", columnDefinition = "UUID")
     private UUID orderId;
+    @Column(name = "data_pedido")
     private LocalDateTime orderDate;
+    @Column(name = "data_finalizacao")
     private LocalDateTime finishDate;
     @ManyToOne
-    private MysteriousCustomer mysteriousCustomer;
-    private OrderStatus orderStatus;
-    @ManyToOne
-    private PickUpLocation pickUpLocation;
-    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_mysterious_user")
+    private MysteriousUser mysteriousUser;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderItemId")
     private List<OrderItem> orderItems;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "orderActionId")
     private List<OrderAction> orderActionList;
+    @Column(name = "valor_total")
     private Double totalValue;
 
     public MysteriousOrder() {
@@ -33,12 +38,10 @@ public class MysteriousOrder {
         this.orderActionList = new ArrayList<>();
     }
 
-    public MysteriousOrder(UUID orderId, LocalDateTime orderDate, MysteriousCustomer mysteriousCustomer, OrderStatus orderStatus, PickUpLocation pickUpLocation, List<OrderItem> orderItems) {
+    public MysteriousOrder(UUID orderId, LocalDateTime orderDate, MysteriousUser mysteriousUser, OrderStatus orderStatus, List<OrderItem> orderItems) {
         this.orderId = orderId;
         this.orderDate = orderDate;
-        this.mysteriousCustomer = mysteriousCustomer;
-        this.orderStatus = orderStatus;
-        this.pickUpLocation = pickUpLocation;
+        this.mysteriousUser = mysteriousUser;
         this.orderItems = orderItems;
     }
 
@@ -52,11 +55,6 @@ public class MysteriousOrder {
 
     public void finishOrder() {
         this.finishDate = LocalDateTime.now();
-        this.orderStatus = OrderStatus.FINISHED;
-    }
-
-    public void cancelOrder() {
-        this.orderStatus = OrderStatus.CANCELLED;
     }
 
     public void addOrderAction(OrderAction orderAction) {
@@ -87,28 +85,12 @@ public class MysteriousOrder {
         this.finishDate = finishDate;
     }
 
-    public MysteriousCustomer getMysteriousCustomer() {
-        return mysteriousCustomer;
+    public MysteriousUser getMysteriousUser() {
+        return mysteriousUser;
     }
 
-    public void setMysteriousCustomer(MysteriousCustomer mysteriousCustomer) {
-        this.mysteriousCustomer = mysteriousCustomer;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public PickUpLocation getPickUpLocation() {
-        return pickUpLocation;
-    }
-
-    public void setPickUpLocation(PickUpLocation pickUpLocation) {
-        this.pickUpLocation = pickUpLocation;
+    public void setMysteriousUser(MysteriousUser mysteriousUser) {
+        this.mysteriousUser = mysteriousUser;
     }
 
     public List<OrderItem> getOrderItems() {

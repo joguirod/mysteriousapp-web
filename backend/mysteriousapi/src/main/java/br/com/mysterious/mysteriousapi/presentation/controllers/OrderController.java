@@ -30,16 +30,26 @@ public class OrderController {
     private final GetOrderByIdUseCase getOrderByIdUseCase;
     private final GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase;
     private final CancelOrderUseCase cancelOrderUseCase;
-    private final GetOrdersByOrderStatusUseCase getOrdersByOrderStatusUseCase;
+    private final GetOrdersByYearUseCase getOrdersByYearUseCase;
+    private final GetOrdersByMonthUseCase getOrdersByMonthUseCase;
+    private final GetOrdersByMonthYearUseCase getOrdersByMonthYearUseCase;
+    private final GetTotalValueByYearUseCase getTotalValueByYearUseCase;
+    private final GetTotalValueByMonthUseCase getTotalValueByMonthUseCase;
+    private final GetTotalValueByMonthYearUseCase getTotalValueByMonthYearUseCase;
 
-    public OrderController(MysteriousOrderDTOMapper mysteriousOrderDTOMapper, CreateOrderUseCase createOrderUseCase, GetAllOrdersUseCase getAllOrdersUseCase, GetOrderByIdUseCase getOrderByIdUseCase, GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase, CancelOrderUseCase cancelOrderUseCase, GetOrdersByOrderStatusUseCase getOrdersByOrderStatusUseCase) {
+    public OrderController(MysteriousOrderDTOMapper mysteriousOrderDTOMapper, CreateOrderUseCase createOrderUseCase, GetAllOrdersUseCase getAllOrdersUseCase, GetOrderByIdUseCase getOrderByIdUseCase, GetOrdersByCustomerIdUseCase getOrdersByCustomerIdUseCase, CancelOrderUseCase cancelOrderUseCase, GetOrdersByYearUseCase getOrdersByYearUseCase, GetOrdersByMonthUseCase getOrdersByMonthUseCase, GetOrdersByMonthYearUseCase getOrdersByMonthYearUseCase, GetTotalValueByYearUseCase getTotalValueByYearUseCase, GetTotalValueByMonthUseCase getTotalValueByMonthUseCase, GetTotalValueByMonthYearUseCase getTotalValueByMonthYearUseCase) {
         this.mysteriousOrderDTOMapper = mysteriousOrderDTOMapper;
         this.createOrderUseCase = createOrderUseCase;
         this.getAllOrdersUseCase = getAllOrdersUseCase;
         this.getOrderByIdUseCase = getOrderByIdUseCase;
         this.getOrdersByCustomerIdUseCase = getOrdersByCustomerIdUseCase;
         this.cancelOrderUseCase = cancelOrderUseCase;
-        this.getOrdersByOrderStatusUseCase = getOrdersByOrderStatusUseCase;
+        this.getOrdersByYearUseCase = getOrdersByYearUseCase;
+        this.getOrdersByMonthUseCase = getOrdersByMonthUseCase;
+        this.getOrdersByMonthYearUseCase = getOrdersByMonthYearUseCase;
+        this.getTotalValueByYearUseCase = getTotalValueByYearUseCase;
+        this.getTotalValueByMonthUseCase = getTotalValueByMonthUseCase;
+        this.getTotalValueByMonthYearUseCase = getTotalValueByMonthYearUseCase;
     }
 
     @PostMapping
@@ -53,6 +63,39 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
         List<MysteriousOrder> mysteriousOrders = getAllOrdersUseCase.execute();
         return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
+    }
+
+    @GetMapping("/year/{year}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByYear(@PathVariable String year) {
+        List<MysteriousOrder> mysteriousOrders = getOrdersByYearUseCase.execute(year);
+        return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
+    }
+
+    @GetMapping("/month/{month}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByMonth(@PathVariable Integer month) {
+        List<MysteriousOrder> mysteriousOrders = getOrdersByMonthUseCase.execute(month);
+        return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
+    }
+
+    @GetMapping("/epoch")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByEpoch(@RequestParam Integer month, @RequestParam String year) {
+        List<MysteriousOrder> mysteriousOrders = getOrdersByMonthYearUseCase.execute(month, year);
+        return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(mysteriousOrders), HttpStatus.OK);
+    }
+
+    @GetMapping("income/year/{year}")
+    public ResponseEntity<Double> getIncomeByYear(@PathVariable String year) {
+        return new ResponseEntity<>(getTotalValueByYearUseCase.execute(year), HttpStatus.OK);
+    }
+
+    @GetMapping("income/month/{month}")
+    public ResponseEntity<Double> getIncomeByMonth(@PathVariable Integer month) {
+        return new ResponseEntity<>(getTotalValueByMonthUseCase.execute(month), HttpStatus.OK);
+    }
+
+    @GetMapping("income/epoch")
+    public ResponseEntity<Double> getIncomeByEpoch(@RequestParam Integer month, @RequestParam String year) {
+        return new ResponseEntity<>(getTotalValueByMonthYearUseCase.execute(month, year), HttpStatus.OK);
     }
 
     @GetMapping("/{orderId}")
