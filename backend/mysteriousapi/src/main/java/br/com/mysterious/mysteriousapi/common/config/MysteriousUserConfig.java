@@ -2,6 +2,7 @@ package br.com.mysterious.mysteriousapi.common.config;
 
 import br.com.mysterious.mysteriousapi.application.providers.HashProvider;
 import br.com.mysterious.mysteriousapi.application.providers.TokenProvider;
+import br.com.mysterious.mysteriousapi.application.usecases.mysteriousUser.GetMysteriousUserByIdUseCase;
 import br.com.mysterious.mysteriousapi.application.usecases.mysteriousUser.SignInMysteriousUserUseCase;
 import br.com.mysterious.mysteriousapi.application.usecases.mysteriousUser.SignupMysteriousUserUseCase;
 import br.com.mysterious.mysteriousapi.persistence.repositories.MysteriousUserRepository;
@@ -25,5 +26,10 @@ public class MysteriousUserConfig {
     @Bean
     SignInMysteriousUserUseCase signInMysteriousUserUseCase(MysteriousUserRepository mysteriousUserRepository, HashProvider hashProvider, TokenProvider tokenProvider) {
         return new SignInMysteriousUserUseCase(mysteriousUserRepository, hashProvider, tokenProvider);
+    }
+
+    @Bean
+    GetMysteriousUserByIdUseCase getMysteriousUserByIdUseCase(MysteriousUserRepository mysteriousUserRepository) {
+        return new GetMysteriousUserByIdUseCase(mysteriousUserRepository);
     }
 }
