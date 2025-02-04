@@ -121,11 +121,4 @@ public class OrderController {
         MysteriousOrder order = cancelOrderUseCase.execute(changeOrderStatusRequestDTO.userId(), changeOrderStatusRequestDTO.orderId());
         return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTO(order), HttpStatus.OK);
     }
-    
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersByStatus(@PathVariable int status) {
-        OrderStatus orderStatus = OrderStatus.values()[status];
-        List<MysteriousOrder> orders = getOrdersByOrderStatusUseCase.execute(orderStatus);
-        return new ResponseEntity<>(mysteriousOrderDTOMapper.toResponseDTOList(orders), HttpStatus.OK);
-    }
 }
